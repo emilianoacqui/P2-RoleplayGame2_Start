@@ -1,8 +1,5 @@
 namespace Ucu.Poo.RoleplayGame;
 
-public interface IMagicItem
+public interface IMagicItem : IAttackItem, IDefenseItem
 {
-    int AttackValue { get; }
-
-    int DefenseValue { get; }
 }

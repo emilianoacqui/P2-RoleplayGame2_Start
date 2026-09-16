@@ -1,25 +1,27 @@
 ﻿using Ucu.Poo.RoleplayGame;
 
 SpellsBook book = new SpellsBook();
-book.Spells = new Spell[]{ new Spell() };
+book.Spells = new Spell[] { new Spell() };
 
-Wizard gandalf = new Wizard("Gandalf");
-gandalf.Staff = new Staff();
-gandalf.SpellsBook = book;
+Mago gandalf = new Mago("Gandalf", 100);
+gandalf.Libro = book;
+gandalf.AgregarItem(new Staff());
 
-Dwarf gimli = new Dwarf("Gimli");
-gimli.Axe = new Axe();
-gimli.Helmet = new Helmet();
-gimli.Shield = new Shield();
+Enano gimli = new Enano("Gimli", 100);
+gimli.AgregarItem(new Axe());
+gimli.AgregarItem(new Shield());
 
-Console.WriteLine($"Gimli has ❤️ {gimli.Health}");
-Console.WriteLine($"Gandalf attacks Gimli with ⚔️ {gandalf.AttackValue}");
+Juego juego = new Juego();
+juego.AgregarPersonaje(gandalf);
+juego.AgregarPersonaje(gimli);
 
-gimli.ReceiveAttack(gandalf.AttackValue);
+Console.WriteLine($"Gimli has ❤️ {gimli.Vida}");
+Console.WriteLine($"Gandalf attacks Gimli with ⚔️ {gandalf.ObtenerAtaque()}");
 
-Console.WriteLine($"Gimli has ❤️ {gimli.Health}");
+juego.Atacar(gandalf, gimli);
 
-gimli.Cure();
+Console.WriteLine($"Gimli has ❤️ {gimli.Vida}");
 
-Console.WriteLine($"Gimli has ❤️ {gimli.Health}");
+juego.Curar(gimli, 20);
 
+Console.WriteLine($"Gimli has ❤️ {gimli.Vida}");
