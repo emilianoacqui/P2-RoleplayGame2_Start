@@ -1,161 +1,172 @@
+namespace Ucu.Poo.RoleplayGame;
+
 using System.Collections.Generic;
 
-namespace JuegoDeRol
+public interface IPersonaje
 {
-    public interface IPersonaje
-    {
-        string Nombre { get; set; }
-        int Vida { get; set; }
+    string Nombre { get; set; }
+    int Vida { get; set; }
 
-        void Curar(int puntos);
-        int ObtenerAtaque();
-        int ObtenerDefensa();
+    void Curar(int puntos);
+    int ObtenerAtaque();
+    int ObtenerDefensa();
+}
+
+public class Enano : IPersonaje
+{
+    public string Nombre { get; set; }
+    public int Vida { get; set; }
+
+    private List<IItem> items = new List<IItem>();
+
+    public Enano(string nombre, int vida)
+    {
+        Nombre = nombre;
+        Vida = vida;
     }
 
-    public class Enano : IPersonaje
+    public void AgregarItem(IItem item)
     {
-        public string Nombre { get; set; }
-        public int Vida { get; set; }
-
-        private List<ItemNoMagico> items = new List<ItemNoMagico>();
-
-        public Enano(string nombre, int vida)
-        {
-            Nombre = nombre;
-            Vida = vida;
-        }
-
-        public void AgregarItem(ItemNoMagico item)
-        {
-            items.Add(item);
-        }
-
-        public void Curar(int puntos)
-        {
-            Vida += puntos;
-        }
-
-        public int ObtenerAtaque()
-        {
-            int total = 0;
-
-            foreach (ItemNoMagico item in items)
-            {
-                total += item.Ataque;
-            }
-
-            return total;
-        }
-
-        public int ObtenerDefensa()
-        {
-            int total = 0;
-
-            foreach (ItemNoMagico item in items)
-            {
-                total += item.Defensa;
-            }
-
-            return total;
-        }
+        items.Add(item);
     }
 
-    public class Elfo : IPersonaje
+    public void Curar(int puntos)
     {
-        public string Nombre { get; set; }
-        public int Vida { get; set; }
-
-        private List<ItemNoMagico> items = new List<ItemNoMagico>();
-
-        public Elfo(string nombre, int vida)
-        {
-            Nombre = nombre;
-            Vida = vida;
-        }
-
-        public void AgregarItem(ItemNoMagico item)
-        {
-            items.Add(item);
-        }
-
-        public void Curar(int puntos)
-        {
-            Vida += puntos;
-        }
-
-        public int ObtenerAtaque()
-        {
-            int total = 0;
-
-            foreach (ItemNoMagico item in items)
-            {
-                total += item.Ataque;
-            }
-
-            return total;
-        }
-
-        public int ObtenerDefensa()
-        {
-            int total = 0;
-
-            foreach (ItemNoMagico item in items)
-            {
-                total += item.Defensa;
-            }
-
-            return total;
-        }
+        Vida += puntos;
     }
 
-    public class Mago : IPersonaje
+    public int ObtenerAtaque()
     {
-        public string Nombre { get; set; }
-        public int Vida { get; set; }
+        int total = 0;
 
-        private List<ItemMagico> items = new List<ItemMagico>();
-
-        public LibroDeHechizos Libro { get; set; }
-
-        public Mago(string nombre, int vida)
+        foreach (IItem item in items)
         {
-            Nombre = nombre;
-            Vida = vida;
-            Libro = new LibroDeHechizos();
-        }
-
-        public void AgregarItem(ItemMagico item)
-        {
-            items.Add(item);
-        }
-
-        public void Curar(int puntos)
-        {
-            Vida += puntos;
-        }
-
-        public int ObtenerAtaque()
-        {
-            int total = Libro.ObtenerAtaque();
-
-            foreach (ItemMagico item in items)
+            if (item is IAttackItem atacante)
             {
-                total += item.Ataque;
+                total += atacante.AttackValue;
             }
-
-            return total;
         }
 
-        public int ObtenerDefensa()
+        return total;
+    }
+
+    public int ObtenerDefensa()
+    {
+        int total = 0;
+
+        foreach (IItem item in items)
         {
-            int total = Libro.ObtenerDefensa();
-
-            foreach (ItemMagico item in items)
+            if (item is IDefenseItem defensor)
             {
-                total += item.Defensa;
+                total += defensor.DefenseValue;
             }
-
-            return total;
         }
+
+        return total;
+    }
+}
+
+public class Elfo : IPersonaje
+{
+    public string Nombre { get; set; }
+    public int Vida { get; set; }
+
+    private List<IItem> items = new List<IItem>();
+
+    public Elfo(string nombre, int vida)
+    {
+        Nombre = nombre;
+        Vida = vida;
+    }
+
+    public void AgregarItem(IItem item)
+    {
+        items.Add(item);
+    }
+
+    public void Curar(int puntos)
+    {
+        Vida += puntos;
+    }
+
+    public int ObtenerAtaque()
+    {
+        int total = 0;
+
+        foreach (IItem item in items)
+        {
+            if (item is IAttackItem atacante)
+            {
+                total += atacante.AttackValue;
+            }
+        }
+
+        return total;
+    }
+
+    public int ObtenerDefensa()
+    {
+        int total = 0;
+
+        foreach (IItem item in items)
+        {
+            if (item is IDefenseItem defensor)
+            {
+                total += defensor.DefenseValue;
+            }
+        }
+
+        return total;
+    }
+}
+
+public class Mago : IPersonaje
+{
+    public string Nombre { get; set; }
+    public int Vida { get; set; }
+
+    private List<IMagicItem> items = new List<IMagicItem>();
+
+    public SpellsBook Libro { get; set; }
+
+    public Mago(string nombre, int vida)
+    {
+        Nombre = nombre;
+        Vida = vida;
+        Libro = new SpellsBook();
+    }
+
+    public void AgregarItem(IMagicItem item)
+    {
+        items.Add(item);
+    }
+
+    public void Curar(int puntos)
+    {
+        Vida += puntos;
+    }
+
+    public int ObtenerAtaque()
+    {
+        int total = Libro.AttackValue;
+
+        foreach (IMagicItem item in items)
+        {
+            total += item.AttackValue;
+        }
+
+        return total;
+    }
+
+    public int ObtenerDefensa()
+    {
+        int total = Libro.DefenseValue;
+
+        foreach (IMagicItem item in items)
+        {
+            total += item.DefenseValue;
+        }
+
+        return total;
     }
 }
